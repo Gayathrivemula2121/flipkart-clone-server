@@ -1,39 +1,39 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
-const Product = require('./models/product');
+const Product = require('./models/product'); // adjust if needed
 
-// MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/flipkartclone', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(async () => {
-  console.log('Connected to MongoDB');
 
-  // Sample product data
-  const sampleProducts = [
-    {
-      name: 'Samsung Galaxy M14',
-      price: 12999,
-      image: 'https://rukminim1.flixcart.com/image/416/416/xif0q/mobile/q/z/x/-original-imagzjhwtfthcmzz.jpeg'
-    },
-    {
-      name: 'Realme Narzo 60',
-      price: 14999,
-      image: 'https://rukminim1.flixcart.com/image/416/416/xif0q/mobile/2/t/o/-original-imagstk2hzuthztu.jpeg'
-    },
-    {
-      name: 'iPhone 14 Pro',
-      price: 129999,
-      image: 'https://rukminim1.flixcart.com/image/416/416/xif0q/mobile/y/a/t/-original-imaghxen343tbjgj.jpeg'
-    }
-  ];
+const MONGO_URI = "mongodb+srv://gayathrivemula:MongoDB2005@cluster0.7ill7hc.mongodb.net/flipkartclone?retryWrites=true&w=majority";
 
-  // Insert sample data
-  await Product.insertMany(sampleProducts);
-  console.log('Sample products inserted!');
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('Connected to MongoDB');
 
-  mongoose.disconnect();
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-});
+    await Product.deleteMany({}); // Clear old data
+
+    const products = [
+      {
+        name: "iPhone 14 Pro Max",
+        image: "https://example.com/iphone.jpg",
+        price: 129999
+      },
+      {
+        name: "Samsung Galaxy S23 Ultra",
+        image: "https://example.com/samsung.jpg",
+        price: 119999
+      },
+      {
+        name: "MacBook Air M2",
+        image: "https://example.com/macbook.jpg",
+        price: 114999
+      }
+    ];
+
+    await Product.insertMany(products);
+    console.log("Sample products added!");
+    process.exit();
+  })
+  .catch(err => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
